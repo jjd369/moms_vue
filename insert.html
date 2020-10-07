@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>상품등록</title>
+		<script src="vue.js"></script>
+		<script src='axios.min.js'></script>
+
+		<style>
+			#myapp{
+				width:100%;
+				max-width:1200px;
+				margin:0 auto;
+			}
+			body{
+				background:#eee;
+			}
+			a{
+				color:#373737;
+				text-decoration: none;
+			}
+		    /*header*/
+			.header{
+				text-align:center;
+				position: relative;
+			}
+			.header h1{
+				padding:5% 0 5%;
+				font-size:2.5em;
+				font-family:'Jalnan';
+			}
+			/*insert content*/
+			.insert_wrap{
+				width:40%;
+				display: -webkit-box;
+				display: -moz-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-direction: normal;
+				-webkit-box-orient: vertical;
+				-moz-box-direction: normal;
+				-moz-box-orient: vertical;
+				flex-direction:column;
+				padding:5% 3% 5% 3%;
+				margin:0 auto;
+				background:#fff;
+				border-radius:5vw;
+				box-shadow: 3px 3px 20px #E0E0E0;
+				margin-bottom: 5%;
+			}
+			label{
+				margin-top:3%;
+				text-indent: 5%;
+				font-size:14px;
+			}
+			input{
+				margin-top:3%;
+				padding:3%;
+				border:1px solid #aaa;
+				border-radius:1vw;
+				font-size:14px;
+				background:#fff;
+			}
+			.btn{
+				-webkit-border-radius:0;
+				-webkit-appearance:none;
+				padding: 2%;
+				border:0;
+				border-radius: 1vw;
+				font-size: 16px;
+				background: #fff;
+				color:#fff;
+				background:#373737;
+				cursor: pointer;
+			}				
+			.home_btn{
+				position: absolute;
+				right: 5%;
+				top: 55%;
+				padding: 1%;
+				border: 0;
+				border-radius: 1vw;
+				font-size: 16px;
+				background: #373737;
+				color:#fff;
+				font-weight: 900;
+			}						
+		</style>
+		 <script>
+			 function mainLink() {
+			  location.href='http://ghana369.dothome.co.kr/moms_vue/index.html';
+			 }
+		 </script>
+	</head>
+	<body>
+	
+		<div id='myapp'>
+			<!-- header -->
+			<div class="header">
+				<h1>상품등록</h1>
+				<a class="home_btn" href="javascript:mainLink()">상품목록보기</a>
+			</div>
+			<!-- insert content -->
+			<div class="insert_wrap">
+				<label for="image">image</label>
+				<input id="image" type='text' v-model='image' placeholder="img/burger_list7.jpg(chicken_list , side_list , beverage_list)">
+				<label for="name">name</label>
+				<input id="name" type='text' v-model='name' placeholder="딥치즈버거">
+				<label for="price">price</label>
+				<input id="price" type='text' v-model='price' placeholder="4800">
+				<label for="menu">menu</label>
+				<input id="menu" type='text' v-model='menu' placeholder="burger(chicken , side , beverage)">
+				<input class="btn" type='button' value='Add' @click='addRecord();'>
+			</div>
+		</div>
+		<!-- Script -->
+		<script>
+			var app = new Vue({
+				el: '#myapp',
+				data: {
+					moms: "",
+					id: 0,
+					image: "",
+					name: "",
+					price: 0,
+					menu: ""
+				},
+				methods: {
+					allRecords: function(){
+						axios.post('ajaxfile.php', {
+						    request: 1
+						})
+						.then(function (response) {
+							app.moms = response.data;
+						})
+						.catch(function (error) {
+						    console.log(error);
+						});
+						
+					},
+					addRecord: function(){
+
+						if(this.image != '' && this.name != '' && this.price != 0 && this.menu != ''){
+							axios.post('ajaxfile.php', {
+							    request: 2,
+							    image: this.image,
+							    name: this.name,
+							    price: this.price,
+								menu: this.menu
+							})
+							.then(function (response) {
+
+								// Fetch records
+							    app.allRecords();
+
+							    // Empty values
+							    app.image="",
+							    app.name="",
+							    app.price=0,
+								app.menu=""
+
+							    alert(response.data);
+							})
+							.catch(function (error) {
+							    console.log(error);
+							});
+						}else{
+							alert('Fill all fields.');
+						}
+									
+					},
+					created: function(){
+					this.allRecords();
+				}
+			 }
+			})
+		</script>
+	</body>
+</html>

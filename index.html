@@ -1,0 +1,372 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>맘스터치</title>
+		<script src="vue.js"></script>
+		<script src='axios.min.js'></script>
+
+		<style>
+			@font-face{ 
+				font-family:'Jalnan';
+				src:url(nmfont/Jalnan.eot);
+				src:url(nmfont/Jalnan.woff) format('woff'), url(nmfont/Jalnan.ttf) format('truetype');	
+			} 
+			#myapp{
+				width:100%;
+			}
+			body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,form,fieldset,p,button{
+				margin:0;
+				padding:0;
+				font-size:16px
+			}
+			body{
+				background:#eee;
+			}
+			a{
+				color:#373737;
+				text-decoration: none;
+			}
+			ul,li{
+				list-style:none;
+			}
+			.content{
+				background:#eee;
+			}
+			/*header*/
+			.header{
+				text-align:center;
+				position: relative;
+				max-width:1200px;
+				margin:0 auto;
+			}
+			.header h1{
+				padding:5% 0 5%;
+				font-size:2.5em;
+				font-family:'Jalnan';
+			}
+			/*tab title*/
+			.tabs_wrap{
+				width:100%;
+				background:#fff;
+			}
+			.tabs{
+				width:100%;
+				max-width:1200px;
+				margin:0 auto;
+				display: -webkit-box;
+				display: -moz-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;  
+			}
+			.tab {
+				outline:none;
+				border: 0px;
+				font-family: 'Jalnan';
+				width: 25%;
+				padding: 5% 0 5%;
+				font-size: 2em;
+				text-align: center;
+				position: relative;
+				background: #fff;
+			}
+			.tab:hover {
+				background: #f8f8f8;
+			}
+			.active {
+				color:#e60000;
+			}
+			.tab.active:after{
+				content:' ';
+				width:100%;
+				height:3%;
+				background-color:#e60000;
+				position:absolute;
+				left:0;
+				bottom:0%; 
+			}
+			/*tab content*/
+		    .tabContent ul{
+				max-width:1200px;
+				width:85%;
+				padding: 5% 0 5%;
+				margin:0 auto;
+				display: -webkit-box;
+				display: -moz-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;  
+
+				-webkit-flex-wrap:wrap;
+				-ms-flex-wrap:wrap;
+				flex-wrap:wrap;
+				} 
+			.tabContent ul li{
+				width:47.5%;
+				margin-bottom:4%;
+				padding:5% 0 5%;
+				border-radius:5vw;
+				box-shadow:3px 3px 20px #E0E0E0;
+				background:#fff;
+			}
+				/* list 짝수 */
+			.tabContent ul li:nth-child(odd){
+				margin-right:2.5%;
+			}
+				/* list 홀수 */
+			.tabContent ul li:nth-child(even){
+				margin-left:2.5%;
+			}
+			.tabContent ul li {
+				display: -webkit-box;
+				display: -moz-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;
+
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				
+				-webkit-box-direction: normal;
+				-webkit-box-orient: vertical;
+				-moz-box-direction: normal;
+				-moz-box-orient: vertical;
+				flex-direction:column;
+
+				-ms-flex-pack: distribute;
+				-webkit-justify-content: space-around;
+				justify-content:space-around;
+
+			}
+			.tabContent ul li img{
+				width:70%;
+			}
+			.tabContent ul li span{
+				padding: 2% 0 2%;
+				text-align:center;
+				width:100%;
+			}			
+			.input_txt,.btn{
+				padding: 2%;
+				border: 1px solid #aaa;
+				border-radius: 1vw;
+				font-size: 16px;
+				background: #fff;
+			}										
+			.btn{
+				background:#373737;
+				color:#fff;
+				cursor: pointer;
+				border:0;
+				-webkit-border-radius:0;
+				border-radius: 1vw;
+				-webkit-appearance:none;
+			}
+			.add_btn{
+				position: absolute;
+				right: 5%;
+				top: 55%;
+				padding: 1%;
+				border: 0;
+				border-radius: 1vw;
+				font-size: 16px;
+				background: #373737;
+				color:#fff;
+				font-weight: 900;
+			}
+			/* 트랜지션 전용 스타일 */
+			.item{
+				transition: all 0.5s ease;
+			}
+			.v-leave-active {
+				opacity: 1;
+				transform: translateX(100%);
+			}
+			.v-enter-active {
+				opacity: 0;
+				transform: translateX(-100%);
+			}
+			.v-enter {
+				opacity: 1;
+				transform: translateX(-100%);
+			}
+			.v-leave-to {
+				opacity: 0;
+			}
+		</style>
+		 <script>
+			 function insertGo() {
+			  location.href='http://ghana369.dothome.co.kr/moms_vue/insert.html';
+			 }
+		 </script>
+	</head>
+	<body>
+		<div id='myapp'>
+			<div class="myapp_inner">
+				<!-- header -->
+				<div class="header">
+					<h1>맘스돈터치</h1>
+					<a class="add_btn" href="javascript:insertGo()">상품등록</a>
+				</div>
+				<!-- tab title -->
+				<div class="tabs_wrap">
+					<div class="tabs">
+						<tab-item
+						v-for="item in list"
+						v-bind="item" :key="item.id"
+						v-model="currentId"/>
+				  	</div>
+				</div>
+				<!-- tab content -->
+				<div class="list_content">
+					<div class="tabContent">
+						<transition-group tag="ul">
+							<li v-for='(clist,index) in moms' v-if="clist.menu === show" :key="clist.id" class="item">
+								<img :src='clist.image' :alt='clist.name'>
+								<span><input class ="input_txt" type='text' v-model='clist.name' ></span>
+								<span><input class ="input_txt" type='text' v-model='clist.price' ></span>
+								<span>
+									<input class="btn" type='button' value='Update' @click='updateRecord(index,clist.id);'>&nbsp;
+									<input class="btn" type='button' value='Delete' @click='deleteRecord(index,clist.id)'>
+								</span>
+							</li>
+						</transition-group>
+					</div>
+				</div>
+			</div>	
+		</div>
+
+		<!-- Script -->
+		<script>
+			Vue.component('tab-item',{
+				// 부모에게 input이라는 이벤트를 위로 던져준다, v-model은 input이라는 이벤트로 받기 때문에 
+				template:`<button @click="$emit('input', id)" :class="[active, 'tab']">{{ label }}</button>`,
+				props: {
+					id: Number,
+					label: String,
+					value: Number//부모에서 v-model로 던진 값은 value
+				},
+				computed: {
+					active() {
+					return this.value === this.id ? 'active' : false
+					}
+				}
+			});
+			var app = new Vue({
+				el: '#myapp',
+				data: {
+					show: "burger",
+					currentId: 1,
+					list: [
+						{ id: 1, label: '버거', food: 'burger' },
+						{ id: 2, label: '치킨', food: 'chicken' },
+						{ id: 3, label: '사이드', food: 'side' },
+						{ id: 4, label: '음료', food: 'beverage' }
+					],
+					moms: "",
+					id: 0,
+					image: "",
+					name: "",
+					price: 0,
+					menu: "",
+				},
+				watch: {
+					currentId: function(val){
+						this.show = this.list[(val-1)].food || {}
+					}
+				},
+				methods: {
+					allRecords: function(){
+						axios.post('ajaxfile.php', {
+						    request: 1,
+						})
+						.then(function (response) {
+							app.moms = response.data;
+						})
+						.catch(function (error) {
+						    console.log(error);
+						});
+					},
+					addRecord: function(){
+
+						if(this.image != '' && this.name != '' && this.price != 0 ){
+							axios.post('ajaxfile.php', {
+							    request: 2,
+							    image: this.image,
+							    name: this.name,
+							    price: this.price,
+							})
+							.then(function (response) {
+
+								// Fetch records
+							    app.allRecords();
+
+							    // Empty values
+							    app.image="",
+							    app.name="",
+							    app.price=0,
+
+							    alert(response.data);
+							})
+							.catch(function (error) {
+							    console.log(error);
+							});
+						}else{
+							alert('Fill all fields.');
+						}
+									
+					},
+					updateRecord: function(index,id){
+
+						// Read value from Textbox
+						var image = this.moms[index].image;
+						var name = this.moms[index].name;
+						var price = this.moms[index].price;
+						var menu = this.moms[index].menu;
+
+						if(image !='' && name !='' && price !=0 && menu !=''){
+							axios.post('ajaxfile.php', {
+							    request: 3,
+								id: id,
+								image: image,
+							    name: name,
+							    price: price,
+								menu: menu
+							})
+							.then(function (response) {
+								alert(response.data);
+							})
+							.catch(function (error) {
+							    console.log(error);
+							});
+						}
+					},
+					deleteRecord: function(index,id){
+						
+						axios.post('ajaxfile.php', {
+						    request: 4,
+						    id: id
+						})
+						.then(function (response) {
+
+							// Remove index from users
+						    app.moms.splice(index, 1);
+						    alert(response.data);
+						})
+						.catch(function (error) {
+						    console.log(error);
+						});
+						  
+					},
+				},
+				created: function(){
+					this.allRecords();
+				}
+			})
+
+		</script>
+	</body>
+</html>
